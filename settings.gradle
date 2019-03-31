@@ -1,0 +1,5 @@
+rootProject.name = 'Library_app_networking'
+include 'common'
+include 'client'
+include 'server'
+
