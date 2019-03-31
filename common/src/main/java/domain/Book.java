@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.List;
+
 public class Book extends BaseEntity<Long>{
     private String serialNumber;
     private String name;

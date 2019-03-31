@@ -24,7 +24,7 @@ public interface IBookService {
     void deleteBook(Long id) throws ValidatorException;
 
     String GET_ALL_BOOKS = "getAllBooks";
-    Future<Set> getAllBooks();
+    Future<Set<Book>> getAllBooks();
 
     String UPDATE_BOOK = "updateBook";
     void updateBook(Book book) throws ValidatorException;

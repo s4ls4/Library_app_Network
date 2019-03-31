@@ -41,7 +41,7 @@ public class TCPServer {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ServiceException("could not start server", e);
+            throw new TCPServerException("could not start server", e);
         }
     }
 
@@ -70,7 +70,7 @@ public class TCPServer {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new ServiceException("server - data " +
+                throw new TCPServerException("server - data " +
                         "exchange" +
                         " " +
                         "error", e);
