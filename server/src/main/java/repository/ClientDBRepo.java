@@ -4,11 +4,9 @@ import domain.Client;
 import domain.validators.Validator;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public class ClientDBRepo extends InMemoryRepository<Long, Client> {
+public class ClientDBRepo extends DBRepository<Long,Client> {
 
     private static final String URL = "jdbc:postgresql://localhost:5432/LibraryApp";
     private static final String USERNAME = "postgres";
@@ -19,9 +17,9 @@ public class ClientDBRepo extends InMemoryRepository<Long, Client> {
     }
 
 
-    public Iterable<Client> findAll(){
+    public Set<Client> findAllFromDB(){
 
-        List<Client> clients = new ArrayList<>();
+        Set<Client> clients = new HashSet<>();
         String sql ="SELECT * FROM clients";
 
         try (Connection connection = DriverManager.getConnection(URL, USERNAME,
@@ -46,16 +44,16 @@ public class ClientDBRepo extends InMemoryRepository<Long, Client> {
     }
 
 
-    public Optional<Client> save(Optional<Client> client) {
+    public Optional<Client> saveInDB(Client client) {
         String sql = "INSERT INTO clients(\"cserialNumber\",cname,spent,cid) values (?,?,?,?)";
         try (Connection connection = DriverManager.getConnection(URL, USERNAME,
                 PASSWORD);
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, client.get().getSerialNumber());
-            statement.setString(2, client.get().getName());
-            statement.setInt(3, client.get().getSpent());
-            statement.setLong(4, client.get().getId());
+            statement.setString(1, client.getSerialNumber());
+            statement.setString(2, client.getName());
+            statement.setInt(3, client.getSpent());
+            statement.setLong(4, client.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -64,13 +62,13 @@ public class ClientDBRepo extends InMemoryRepository<Long, Client> {
         return Optional.empty();
     }
 
-    public Optional<Client> delete(Optional<Long> id) {
+    public Optional<Client> deleteFromDB(Long id) {
         String sql = "DELETE FROM clients WHERE cid=?";
         try (Connection connection = DriverManager.getConnection(URL, USERNAME,
                 PASSWORD);
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setLong(1, id.get());
+            statement.setLong(1, id);
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -79,21 +77,26 @@ public class ClientDBRepo extends InMemoryRepository<Long, Client> {
         return Optional.empty();
     }
 
-    public Optional<Client> update(Optional<Client> client) {
+    public Optional<Client> updateInDB(Client client) {
         String sql = "UPDATE client SET \"cserialNumber\"=?, cname=?, spent=? where cid=?";
         try (Connection connection = DriverManager.getConnection(URL, USERNAME,
                 PASSWORD);
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, client.get().getSerialNumber());
-            statement.setString(2, client.get().getName());
-            statement.setInt(3, client.get().getSpent());
-            statement.setLong(4, client.get().getId());
+            statement.setString(1, client.getSerialNumber());
+            statement.setString(2, client.getName());
+            statement.setInt(3, client.getSpent());
+            statement.setLong(4, client.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Client> getFromDB(Long aLong) {
         return Optional.empty();
     }
 

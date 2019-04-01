@@ -5,6 +5,7 @@ import domain.Client;
 import domain.Purchase;
 import domain.validators.ValidatorException;
 import service.BookService;
+import service.ClientService;
 import service.IBookService;
 
 import java.io.BufferedReader;
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
  */
 public class Console {
     private BookService bookService;
-//    private ClientService clientService;
+    private ClientService clientService;
 //    private PurchaseService purchaseService;
 //    private XMLBookService XMLBookService;
 //    private XMLClientService XMLClientService;
@@ -31,10 +32,10 @@ public class Console {
 //    private DBPurchaseService DBPurchaseService;
 
 
-    public Console(BookService bookService) {
+    public Console(BookService bookService, ClientService clientService) {
 
         this.bookService = bookService;
-//        this.clientService = clientService;
+        this.clientService = clientService;
 //        this.purchaseService = purchaseService;
 //        this.XMLBookService = XMLBookService;
 //        this.XMLClientService = XMLClientService;
@@ -141,16 +142,16 @@ public class Console {
                         int cmdClients = menuClients();
                         while (cmdClients > 0) {
                             if (cmdClients == 1) {
-                                //this.printClientsWithPaging();
+                                this.printClientsWithPaging();
                             }
                             if (cmdClients == 2) {
-                                //this.addClients();
+                                this.addClients();
                             }
                             if (cmdClients == 3) {
-                                //this.deleteClients();
+                                this.deleteClients();
                             }
                             if (cmdClients == 4) {
-                                //this.updateClient();
+                                this.updateClient();
                             }
                             cmdClients = menuClients();
                         }
@@ -289,10 +290,14 @@ public class Console {
     /**
      * Prints all clients from the repository
      */
-//    private void printAllClients() {
-//        Set<Client> client = this.clientService.getAllClients();
-//        client.forEach((i) -> System.out.println(i.toString()));
-//    }
+    private void printAllClients() {
+        try {
+            Future<Set<Client>> client = this.clientService.getAllClients();
+            client.get().forEach((i) -> System.out.println(i.toString()));
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
 //
 //    private void printAllBooksXML() {
 //        Set<Book> book = this.XMLBookService.getAllBooks();
@@ -331,18 +336,18 @@ public class Console {
             System.out.println(e.getMessage());
         }
     }
-//
-//    /**
-//     * Adds a client to the repository
-//     */
-//    private void addClients() {
-//        Client client = this.readClient();
-//        try {
-//            this.clientService.addClient(client);
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
+
+    /**
+     * Adds a client to the repository
+     */
+    private void addClients() {
+        try {
+            Client client = this.readClient();
+            this.clientService.addclient(client);
+        } catch (ValidatorException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 //
 //
 //    private void XMLAddBooks() {
@@ -404,21 +409,21 @@ public class Console {
         }
     }
 
-//
-//    /**
-//     * Deletes a client from the repository
-//     */
-//    private void deleteClients() {
-//        System.out.println("Client id: ");
-//        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-//
-//        try {
-//            Long id = Long.valueOf(bufferRead.readLine());
-//            this.clientService.deleteClient(id);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    /**
+     * Deletes a client from the repository
+     */
+    private void deleteClients() {
+        System.out.println("Client id: ");
+        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+
+        try {
+            Long id = Long.valueOf(bufferRead.readLine());
+            this.clientService.deleteClient(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 //
 //    private void XMLDeleteBooks() {
 //        System.out.println("Book id: ");
@@ -483,20 +488,19 @@ public class Console {
           System.out.println(e.getMessage());
       }
   }
-//
-//    /**
-//     * Update a client from the repository
-//     */
-//    private void updateClient() {
-//        Client client = this.readClient();
-//
-//        try {
-//            this.clientService.updateClient(client);
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
+
+    /**
+     * Update a client from the repository
+     */
+    private void updateClient() {
+        try {
+            Client client = this.readClient();
+            this.clientService.updateClient(client);
+        } catch (ValidatorException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 //    private void updateBookXML() {
 //
 //        this.XMLDeleteBooks();
@@ -711,9 +715,7 @@ public class Console {
                 System.out.println("Invalid input!");
             }
         }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -745,32 +747,35 @@ public class Console {
 //    }
 //
 //
-//    private void printClientsWithPaging() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("page size: ");
-//        int size = scanner.nextInt();
-//        clientService.setPageSize(size);
-//
-//        System.out.println("'n' - next | 'x' - exit: ");
-//
-//        while (true) {
-//            String cmd = scanner.next();
-//            if (cmd.equals("x")) {
-//                System.out.println("exit");
-//                break;
-//            } else if (cmd.equals("n")) {
-//                Set<Client> clients = clientService.getNextClient();
-//                if (clients.size() == 0) {
-//                    System.out.println("That's all clients!");
-//                    break;
-//                }
-//                clients.forEach(System.out::println);
-//            } else {
-//                System.out.println("Invalid input!");
-//            }
-//        }
-//    }
-//
+    private void printClientsWithPaging() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("page size: ");
+        int size = scanner.nextInt();
+        clientService.setPageSize(size);
+
+        System.out.println("'n' - next | 'x' - exit: ");
+        try{
+            while (true) {
+                String cmd = scanner.next();
+                if (cmd.equals("x")) {
+                    System.out.println("exit");
+                    break;
+                } else if (cmd.equals("n")) {
+                    Future<Set<Client>> clients = clientService.getNextClient();
+                    if (clients.get().size() == 0) {
+                        System.out.println("That's all clients!");
+                        break;
+                    }
+                    clients.get().forEach(System.out::println);
+                } else {
+                    System.out.println("Invalid input!");
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
 //    private void printBooksWithPagingXML() {
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.println("page size: ");

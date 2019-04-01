@@ -1,12 +1,13 @@
 import domain.Book;
+import domain.Client;
 import domain.Factory;
 import domain.validators.BookValidator;
+import domain.validators.ClientValidator;
 import domain.validators.ValidatorException;
 import repository.BookDBRepo;
+import repository.ClientDBRepo;
 import repository.Paging.PagingRepository;
-import service.BookService;
-import service.IBookService;
-import service.Message;
+import service.*;
 import tcp.TCPServer;
 import tcp.TCPServerException;
 
@@ -27,8 +28,10 @@ public class ServerApp {
         TCPServer tcpServer = new TCPServer(executorService,
                 IBookService.SERVER_PORT);
         PagingRepository<Long, Book> bookRepository = new BookDBRepo(new BookValidator());
-
         BookService bookService = new BookService(executorService, bookRepository);
+
+        PagingRepository<Long, Client> clientRepository = new ClientDBRepo(new ClientValidator());
+        ClientService clientService = new ClientService(executorService, clientRepository);
 
 
         tcpServer.addHandler(
@@ -48,10 +51,39 @@ public class ServerApp {
                 });
 
         tcpServer.addHandler(
+                IClientService.GET_ALL_CLIENTS, (request) -> {
+                    try {
+                        Future<Set<Client>> result =
+                                clientService.getAllClients();
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        String responseBody = result.get().stream().map(Factory::clientToFile).collect(Collectors.joining(";"));
+                        return getMessage(Message.OK, responseBody);
+                    } catch (InterruptedException | ExecutionException | TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
+
+        tcpServer.addHandler(
                 IBookService.ADD_BOOK, (request) -> {
                     try{
                         bookService.addBook(Factory.bookFromFile(Arrays.asList(request.getBody().split(","))));
                         return getMessage(Message.OK, "The book was added successfully （＾ω＾）");
+
+                    }catch (TCPServerException | ValidatorException e) {
+                        e.printStackTrace();
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
+        tcpServer.addHandler(
+                IClientService.ADD_CLIENT, (request) -> {
+                    try{
+                        clientService.addClient(Factory.clientFromFile(Arrays.asList(request.getBody().split(","))));
+                        return getMessage(Message.OK, "The client was added successfully （＾ω＾）");
 
                     }catch (TCPServerException | ValidatorException e) {
                         e.printStackTrace();
@@ -73,6 +105,22 @@ public class ServerApp {
                     }
                 });
 
+
+        tcpServer.addHandler(
+                IClientService.DELETE_CLIENT, (request) -> {
+                    try {
+                        clientService.deleteClient(Long.parseLong(request.getBody()));
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        return getMessage(Message.OK, "Book was deleted successfully （＾ω＾）");
+                    } catch (TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
+
         tcpServer.addHandler(
                 IBookService.UPDATE_BOOK, (request) -> {
                     try {
@@ -80,6 +128,20 @@ public class ServerApp {
                         //compute response
 //                        return new Message(Message.OK, result.get());
                         return getMessage(Message.OK, "Book was updated successfully （＾ω＾）");
+                    } catch (TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
+        tcpServer.addHandler(
+                IClientService.UPDATE_CLIENT, (request) -> {
+                    try {
+                        clientService.updateClient(Factory.clientFromFile(Arrays.asList(request.getBody().split(","))));
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        return getMessage(Message.OK, "Client was updated successfully （＾ω＾）");
                     } catch (TCPServerException e) {
                         e.printStackTrace();
 //                        return new Message(Message.ERROR, e.getMessage());
@@ -103,6 +165,23 @@ public class ServerApp {
                     }
                 });
 
+
+        tcpServer.addHandler(
+                IClientService.GET_NEXT_CLIENT, (request) -> {
+                    try {
+                        Future<Set<Client>> result =
+                                clientService.getNextClient();
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        String responseBody = result.get().stream().map(Factory::clientToFile).collect(Collectors.joining(";"));
+                        return getMessage(Message.OK, responseBody);
+                    } catch (InterruptedException | ExecutionException | TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
         tcpServer.addHandler(
                 IBookService.SET_PAGE_SIZE, (request) -> {
                     try {
@@ -117,10 +196,22 @@ public class ServerApp {
                     }
                 });
 
+        tcpServer.addHandler(
+                IClientService.SET_PAGE_SIZE, (request) -> {
+                    try {
+                        clientService.setPageSize(Integer.parseInt(request.getBody()));
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        return getMessage(Message.OK, "");
+                    } catch (TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
         tcpServer.startServer();
         System.out.println("server - bye (≧∀≦ゞ");
-
-
 
     }
 
