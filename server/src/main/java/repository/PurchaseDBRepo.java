@@ -4,11 +4,9 @@ import domain.Purchase;
 import domain.validators.Validator;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public class PurchaseDBRepo extends InMemoryRepository<Long, Purchase> {
+public class PurchaseDBRepo extends DBRepository<Long,Purchase> {
     private static final String URL = "jdbc:postgresql://localhost:5432/LibraryApp";
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "98blionlion";
@@ -18,9 +16,9 @@ public class PurchaseDBRepo extends InMemoryRepository<Long, Purchase> {
     }
 
 
-    public Iterable<Purchase> findAll(){
+    public Set<Purchase> findAllFromDB(){
 
-        List<Purchase> purchases = new ArrayList<>();
+        Set<Purchase> purchases = new HashSet<>();
         String sql ="SELECT * FROM purchases";
 
         try (Connection connection = DriverManager.getConnection(URL, USERNAME,
@@ -42,16 +40,16 @@ public class PurchaseDBRepo extends InMemoryRepository<Long, Purchase> {
     }
 
 
-    public Optional<Purchase> save(Optional<Purchase> purchase) {
+    public Optional<Purchase> saveInDB(Purchase purchase) {
 
         String sql = "insert into purchases(bid, cid, pid) values (?,?,?)";
         try (Connection connection = DriverManager.getConnection(URL, USERNAME,
                 PASSWORD);
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setLong(1, purchase.get().getIdBook());
-            statement.setLong(2, purchase.get().getIdClient());
-            statement.setLong(3, purchase.get().getId());
+            statement.setLong(1, purchase.getIdBook());
+            statement.setLong(2, purchase.getIdClient());
+            statement.setLong(3, purchase.getId());
 
 
             statement.executeUpdate();
@@ -59,7 +57,22 @@ public class PurchaseDBRepo extends InMemoryRepository<Long, Purchase> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.of(purchase.get());
+        return Optional.of(purchase);
 
+    }
+
+    @Override
+    public Optional<Purchase> deleteFromDB(Long aLong) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Purchase> updateInDB(Purchase entity) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Purchase> getFromDB(Long aLong) {
+        return Optional.empty();
     }
 }

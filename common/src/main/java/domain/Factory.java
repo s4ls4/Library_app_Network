@@ -12,6 +12,10 @@ public class Factory {
         return ""+c.getId()+","+c.getSerialNumber()+","+c.getName()+","+c.getSpent();
     }
 
+    public static String purchaseToFile(Purchase p){
+        return ""+p.getId()+","+p.getIdClient()+","+p.getIdBook();
+    }
+
     public static Book bookFromFile(List<String> data) {
         Long id = Long.valueOf(data.get(0).trim());
         String serialNumber = data.get(1).trim();
@@ -31,5 +35,15 @@ public class Factory {
         Client c = new Client(serialNumber,name,spent);
         c.setId(id);
         return c;
+    }
+
+    public static Purchase purchaseFromFile(List<String> data) {
+        Long id = Long.valueOf(data.get(0).trim());
+        Long idc = Long.valueOf(data.get(0).trim());
+        Long idb = Long.valueOf(data.get(0).trim());
+
+        Purchase p = new Purchase(idc,idb);
+        p.setId(id);
+        return p;
     }
 }

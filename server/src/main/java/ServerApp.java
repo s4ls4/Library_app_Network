@@ -1,12 +1,15 @@
 import domain.Book;
 import domain.Client;
 import domain.Factory;
+import domain.Purchase;
 import domain.validators.BookValidator;
 import domain.validators.ClientValidator;
+import domain.validators.PurchaseValidator;
 import domain.validators.ValidatorException;
 import repository.BookDBRepo;
 import repository.ClientDBRepo;
 import repository.Paging.PagingRepository;
+import repository.PurchaseDBRepo;
 import service.*;
 import tcp.TCPServer;
 import tcp.TCPServerException;
@@ -32,6 +35,9 @@ public class ServerApp {
 
         PagingRepository<Long, Client> clientRepository = new ClientDBRepo(new ClientValidator());
         ClientService clientService = new ClientService(executorService, clientRepository);
+
+        PagingRepository<Long, Purchase> purchaseRepository = new PurchaseDBRepo(new PurchaseValidator());
+        PurchaseService purchaseService = new PurchaseService(executorService, purchaseRepository);
 
 
         tcpServer.addHandler(
@@ -66,6 +72,23 @@ public class ServerApp {
                     }
                 });
 
+        tcpServer.addHandler(
+                IPurchaseService.GET_ALL_Purchases, (request) -> {
+                    try {
+                        Future<Set<Purchase>> result =
+                                purchaseService.getAllPurchases();
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        String responseBody = result.get().stream().map(Factory::purchaseToFile).collect(Collectors.joining(";"));
+                        return getMessage(Message.OK, responseBody);
+                    } catch (InterruptedException | ExecutionException | TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
+
 
         tcpServer.addHandler(
                 IBookService.ADD_BOOK, (request) -> {
@@ -90,6 +113,19 @@ public class ServerApp {
                         return getMessage(Message.ERROR, e.getMessage());
                     }
                 });
+
+        tcpServer.addHandler(
+                IPurchaseService.ADD_PURCHASE, (request) -> {
+                    try{
+                        purchaseService.addPurchase(Factory.purchaseFromFile(Arrays.asList(request.getBody().split(","))));
+                        return getMessage(Message.OK, "The client was added successfully （＾ω＾）");
+
+                    }catch (TCPServerException | ValidatorException e) {
+                        e.printStackTrace();
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
 
         tcpServer.addHandler(
                 IBookService.DELETE_BOOK, (request) -> {
@@ -182,6 +218,24 @@ public class ServerApp {
                     }
                 });
 
+
+        tcpServer.addHandler(
+                IPurchaseService.GET_NEXT_PURCHASE, (request) -> {
+                    try {
+                        Future<Set<Purchase>> result =
+                                purchaseService.getNextPurchase();
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        String responseBody = result.get().stream().map(Factory::purchaseToFile).collect(Collectors.joining(";"));
+                        return getMessage(Message.OK, responseBody);
+                    } catch (InterruptedException | ExecutionException | TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
+
         tcpServer.addHandler(
                 IBookService.SET_PAGE_SIZE, (request) -> {
                     try {
@@ -200,6 +254,20 @@ public class ServerApp {
                 IClientService.SET_PAGE_SIZE, (request) -> {
                     try {
                         clientService.setPageSize(Integer.parseInt(request.getBody()));
+                        //compute response
+//                        return new Message(Message.OK, result.get());
+                        return getMessage(Message.OK, "");
+                    } catch (TCPServerException e) {
+                        e.printStackTrace();
+//                        return new Message(Message.ERROR, e.getMessage());
+                        return getMessage(Message.ERROR, e.getMessage());
+                    }
+                });
+
+        tcpServer.addHandler(
+                IPurchaseService.SET_PAGE_SIZE, (request) -> {
+                    try {
+                        purchaseService.setPageSize(Integer.parseInt(request.getBody()));
                         //compute response
 //                        return new Message(Message.OK, result.get());
                         return getMessage(Message.OK, "");

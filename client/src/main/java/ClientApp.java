@@ -1,6 +1,7 @@
 import service.BookService;
 import service.ClientService;
 import service.IBookService;
+import service.PurchaseService;
 import tcp.TCPClient;
 import ui.Console;
 
@@ -13,10 +14,12 @@ public class ClientApp {
                 Executors.newFixedThreadPool(
                         Runtime.getRuntime().availableProcessors());
         TCPClient tcpClient = new TCPClient(IBookService.SERVER_HOST, IBookService.SERVER_PORT);
-        BookService bookService = new BookService(executorService, tcpClient);
 
+        BookService bookService = new BookService(executorService, tcpClient);
         ClientService clientService = new ClientService(executorService, tcpClient);
-        Console clientConsole = new Console(bookService,clientService);
+        PurchaseService purchaseService = new PurchaseService(executorService, tcpClient);
+
+        Console clientConsole = new Console(bookService,clientService,purchaseService);
 
         clientConsole.runConsole();
 

@@ -52,7 +52,8 @@ public class ClientService implements IClientService{
                 return new HashSet<>();
             List<String> clients = Arrays.asList(response.getBody().split(";"));
             return clients.stream().map((client) -> Factory.clientFromFile(Arrays.asList(client.split(",")))).collect(Collectors.toSet());
-        });    }
+        });
+    }
 
     @Override
     public void addclient(Client client) throws ValidatorException {
