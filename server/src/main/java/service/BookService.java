@@ -72,7 +72,8 @@ public class BookService {
     public Future<Set<Book>> getAllBooks() {
         return executorService.submit( () -> {
             Iterable<Book> books = this.repository.findAll();
-            return StreamSupport.stream(books.spliterator(), false).collect(Collectors.toSet());
+            return StreamSupport.stream(books.spliterator(), false)
+                    .collect(Collectors.toSet());
         });
     }
 
