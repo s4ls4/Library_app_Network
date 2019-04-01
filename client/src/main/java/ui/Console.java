@@ -123,7 +123,7 @@ public class Console {
                         int cmdBooks = menuBooks();
                         while (cmdBooks > 0) {
                             if (cmdBooks == 1) {
-                                this.printAllBooks();
+                                this.printBooksWithPaging();
                             }
                             if (cmdBooks == 2) {
                                 this.addBooks();
@@ -687,36 +687,36 @@ public class Console {
         }
     }
 
-//    private void printBooksWithPaging() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("page size: ");
-//        int size = scanner.nextInt();
-//        bookService.setPageSize(size);
-//
-//        System.out.println("'n' - next | 'x' - exit: ");
-//        try{
-//        while (true) {
-//            String cmd = scanner.next();
-//            if (cmd.equals("x")) {
-//                System.out.println("exit");
-//                break;
-//            } else if (cmd.equals("n")) {
-//                Future<Set<Book>> books = bookService.getNextBook();
-//                if (books.get().size() == 0) {
-//                    System.out.println("That's all books!");
-//                    break;
-//                }
-//                books.get().forEach(System.out::println);
-//            } else {
-//                System.out.println("Invalid input!");
-//            }
-//        }
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void printBooksWithPaging() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("page size: ");
+        int size = scanner.nextInt();
+        bookService.setPageSize(size);
+
+        System.out.println("'n' - next | 'x' - exit: ");
+        try{
+        while (true) {
+            String cmd = scanner.next();
+            if (cmd.equals("x")) {
+                System.out.println("exit");
+                break;
+            } else if (cmd.equals("n")) {
+                Future<Set<Book>> books = bookService.getNextBook();
+                if (books.get().size() == 0) {
+                    System.out.println("That's all books!");
+                    break;
+                }
+                books.get().forEach(System.out::println);
+            } else {
+                System.out.println("Invalid input!");
+            }
+        }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
 
 //    private void printBooksWithPagingDB() {
 //        Scanner scanner = new Scanner(System.in);
