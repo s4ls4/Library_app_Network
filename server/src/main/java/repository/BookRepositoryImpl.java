@@ -19,29 +19,33 @@ public class BookRepositoryImpl implements BookRepository{
     private JdbcOperations jdbcOperations;
 
     @Autowired
-    private Validator<Book> clientValidator;
+    private Validator<Book> bookValidator;
 
 
-    @Override
-    public Book findOne(Long id) {
-        String sql = "SELECT * FROM Books WHERE id='" + id +"';";
-        System.out.println(sql);
-        return jdbcOperations.query(sql, (rs, rowNum) -> {
-            Long newId = rs.getLong("id");
-            String name = rs.getString("name");
-            Book b = new Book(b);
-            b.setId(id);
-            return b;
-        }).get(0);
-    }
+//    @Override
+//    public Book findOne(Long id) {
+//        String sql = "SELECT * FROM books WHERE bid=?";
+//        System.out.println(sql);
+//        return jdbcOperations.query(sql, (rs, rowNum) -> {
+//            Long newId = rs.getLong("id");
+//            String name = rs.getString("name");
+//            Book b = new Book(b);
+//            b.setId(id);
+//            return b;
+//        }).get(0);
+//    }
 
     @Override
     public List<Book> findAll() {
-        String sql = "select * from Books";
+        String sql = "select * from books";
         return jdbcOperations.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");
-            String name = rs.getString("name");
-            Book b = new Book(b);
+            String serialNumber = rs.getString("bserialNumber");
+            String name = rs.getString("bserialNumber");
+            String author = rs.getString("bserialNumber");
+            int price = rs.getInt("price");
+
+            Book b = new Book(serialNumber,name,author,price);
             b.setId(id);
             return b;
         });
@@ -49,16 +53,16 @@ public class BookRepositoryImpl implements BookRepository{
 
     @Override
     public void save(Book book) {
-        String sql = "INSERT INTO Books VALUES(?,?)";
-        clientValidator.validate(book);
-        jdbcOperations.update(sql, book.getId(), book.getName());
+        String sql = "insert into books(bname,\"bserialNumber\",author,price,bid) values (?,?,?,?,?)";
+        bookValidator.validate(book);
+        jdbcOperations.update(sql, book.getId(), book.getSerialNumber(),book.getName(),book.getAuthor(),book.getPrice());
     }
 
     @Override
     public void update(Book book) {
-        String sql = "UPDATE Books SET name = ? WHERE id = ?";
-        clientValidator.validate(book);
-        jdbcOperations.update(sql, book.getName(), book.getId());
+        String sql = "UPDATE book SET \"bserialNumber\"=?, bname=?, author=?, price=? where bid=?";
+        bookValidator.validate(book);
+        jdbcOperations.update(sql, book.getSerialNumber(),book.getName(),book.getAuthor(),book.getPrice(), book.getId());
     }
 
     @Override
@@ -74,7 +78,7 @@ public class BookRepositoryImpl implements BookRepository{
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM Books WHERE ID=?";
+        String sql = "DELETE FROM books WHERE bid=?";
         jdbcOperations.update(sql, id);
     }
 }

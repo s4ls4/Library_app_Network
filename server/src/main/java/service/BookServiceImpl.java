@@ -2,6 +2,8 @@ package service;
 
 import domain.Book;
 import domain.Client;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import repository.BookRepository;
 import repository.Paging.Page;
 import repository.Paging.PageRequest;
@@ -15,8 +17,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@Component
 public class BookServiceImpl implements IBookService{
-
     @Autowired
     private ExecutorService executorService;
     @Autowired

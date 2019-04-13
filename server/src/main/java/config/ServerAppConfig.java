@@ -16,14 +16,16 @@ public class ServerAppConfig {
     @Bean
     RmiServiceExporter rmiServiceExporter() {
         RmiServiceExporter exporter = new RmiServiceExporter();
-        exporter.setServiceName("BookService");
+        exporter.setServiceName("IBookService");
         exporter.setServiceInterface(IBookService.class);
         exporter.setService(bookService());
+        exporter.setRegistryPort(1111);
+        System.out.println(exporter);
         return exporter;
     }
 
     @Bean
-    IBookService studentService() {
+    IBookService bookService() {
         IBookService service = new BookServiceImpl();
         return service;
     }

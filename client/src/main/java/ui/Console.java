@@ -3,20 +3,35 @@ package ui;
 import domain.Book;
 import domain.Client;
 import domain.Purchase;
+import domain.validators.ValidatorException;
+import service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**
  * Author: Stefi Nicoara
  */
+
+@ComponentScan
+@Component
 public class Console {
-    private BookService bookService;
+
+    @Autowired
+    private ExecutorService executorService;
+
+    @Autowired
+    private IBookService bookService;
 //    private ClientService clientService;
 //    private PurchaseService purchaseService;
 //    private XMLBookService XMLBookService;
@@ -25,6 +40,12 @@ public class Console {
 //    private DBClientService DBClientService;
 //    private DBPurchaseService DBPurchaseService;
 
+
+    @Autowired
+    public Console(IBookService bookService, ExecutorService executorService) {
+        this.bookService = bookService;
+        this.executorService = executorService;
+    }
 
     public Console() {
     }
@@ -263,12 +284,11 @@ public class Console {
      * Prints all books from the repository
      */
     private void printAllBooks() {
-        try {
-            Future<Set<Book>> books = this.bookService.getAllBooks();
-            books.get().forEach((i) -> System.out.println(i.toString()));
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        executorService.submit(() -> {
+            Set<Book> books = bookService.getAllBooks();
+            books.forEach(System.out::println);
+
+        });
     }
 
 
@@ -309,11 +329,14 @@ public class Console {
 //     * Adds a book to the repository
 //     */
     private void addBooks() {
-
         try {
-            Book book = this.readBook();
-            this.bookService.addBook(book);
-        } catch (Exception e) {
+            Optional<Book> book = readBook();
+            book.orElseThrow(() -> new ValidatorException("Invalid input"));
+            executorService.submit(() -> {
+                bookService.addBook(book.get());
+                System.out.println("Book was added!");
+            });
+        } catch (ValidatorException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -384,7 +407,10 @@ public class Console {
 
         try {
             Long id = Long.valueOf(bufferRead.readLine());
-            this.bookService.deleteBook(id);
+            executorService.submit(() -> {
+                bookService.deleteBook(id);
+                System.out.println("Book was deleted");
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -463,8 +489,16 @@ public class Console {
   private void updateBooks() {
 
       try {
-          Book book = this.readBook();
-          this.bookService.updateBook(book);
+          Optional<Book> book = readBook();
+          book.orElseThrow(() -> new ValidatorException("Invalid input"));
+          executorService.submit(() -> {
+              try {
+                  bookService.updateBook(book.get());
+                  System.out.println("Book updated");
+              } catch (ValidatorException e) {
+                  System.out.println(e.getMessage());
+              }
+          });
       } catch (Exception e) {
           System.out.println(e.getMessage());
       }
@@ -613,17 +647,23 @@ public class Console {
      *
      * @return the book object
      */
-    private Book readBook() throws Exception {
+    private static Optional<Book> readBook(){
         System.out.println("Read book {id, serialNumber, name, author, price}");
         BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-        Long id = Long.valueOf(bufferRead.readLine());
-        String serialNumber = bufferRead.readLine();
-        String name = bufferRead.readLine();
-        String author = bufferRead.readLine();
-        int price = Integer.parseInt(bufferRead.readLine());
-        Book book = new Book(serialNumber, name, author, price);
-        book.setId(id);
-        return book;
+        try{
+            Long id = Long.valueOf(bufferRead.readLine());
+            String serialNumber = bufferRead.readLine();
+            String name = bufferRead.readLine();
+            String author = bufferRead.readLine();
+            int price = Integer.parseInt(bufferRead.readLine());
+            Book book = new Book(serialNumber, name, author, price);
+            book.setId(id);
+            return Optional.of(book);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     /**
@@ -680,27 +720,23 @@ public class Console {
         bookService.setPageSize(size);
 
         System.out.println("'n' - next | 'x' - exit: ");
-        try{
         while (true) {
             String cmd = scanner.next();
             if (cmd.equals("x")) {
                 System.out.println("exit");
                 break;
-            } else if (cmd.equals("n")) {
-                Future<Set<Book>> books = bookService.getNextBook();
-                if (books.get().size() == 0) {
-                    System.out.println("That's all books!");
-                    break;
-                }
-                books.get().forEach(System.out::println);
-            } else {
-                System.out.println("Invalid input!");
             }
-        }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+            if (!cmd.equals("n")) {
+                System.out.println("Invalid Option");
+                continue;
+            }
+            Set<Book> books = bookService.getNextBook();
+            if (books.size() == 0) {
+                System.out.println("No more clients!");
+                break;
+            }
+            books.forEach(System.out::println);
+
         }
     }
 

@@ -3,8 +3,7 @@ package config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import repository.BookFileRepository;
-import repository.BookRepository;
-import repository.BookRepositoryImpl;
+import repository.*;
 
 @Configuration
 public class AppConfig {
