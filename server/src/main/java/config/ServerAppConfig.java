@@ -1,8 +1,17 @@
 package config;
 
-import service.BookService;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.remoting.rmi.RmiServiceExporter;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import service.BookServiceImpl;
 import service.IBookService;
 
+@Configuration
 public class ServerAppConfig {
     @Bean
     RmiServiceExporter rmiServiceExporter() {
@@ -14,8 +23,14 @@ public class ServerAppConfig {
     }
 
     @Bean
-    BookService studentService() {
-        BookService service = new BookServiceImpl();
+    IBookService studentService() {
+        IBookService service = new BookServiceImpl();
         return service;
+    }
+
+    @Bean
+    ExecutorService executorService(){
+        return Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors());
     }
 }

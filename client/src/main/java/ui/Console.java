@@ -3,19 +3,14 @@ package ui;
 import domain.Book;
 import domain.Client;
 import domain.Purchase;
-import domain.validators.ValidatorException;
-import service.BookService;
-import service.IBookService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.stream.Stream;
 
 /**
  * Author: Stefi Nicoara
@@ -31,16 +26,7 @@ public class Console {
 //    private DBPurchaseService DBPurchaseService;
 
 
-    public Console(BookService bookService) {
-
-        this.bookService = bookService;
-//        this.clientService = clientService;
-//        this.purchaseService = purchaseService;
-//        this.XMLBookService = XMLBookService;
-//        this.XMLClientService = XMLClientService;
-//        this.DBBookService = DBBookService;
-//        this.DBClientService = DBClientService;
-//        this.DBPurchaseService = DBPurchaseService;
+    public Console() {
     }
 
     private int menuFormat() {
