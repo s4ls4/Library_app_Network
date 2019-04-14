@@ -53,7 +53,7 @@ public class BookRepositoryImpl implements BookRepository{
 
     @Override
     public void save(Book book) {
-        String sql = "insert into books(bname,\"bserialNumber\",author,price,bid) values (?,?,?,?,?)";
+        String sql = "insert into books(bid,\"bserialNumber\",bname,author,price) values (?,?,?,?,?)";
         bookValidator.validate(book);
         jdbcOperations.update(sql, book.getId(), book.getSerialNumber(),book.getName(),book.getAuthor(),book.getPrice());
     }

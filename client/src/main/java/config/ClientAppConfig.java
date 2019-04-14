@@ -15,15 +15,14 @@ public class ClientAppConfig {
         RmiProxyFactoryBean rmiProxyFactoryBean = new RmiProxyFactoryBean();
         rmiProxyFactoryBean.setServiceInterface(IBookService.class);
         rmiProxyFactoryBean
-                .setServiceUrl("rmi://localhost:1099/IBooksService");
-
+                .setServiceUrl("rmi://localhost:1706/IBookService");
         return rmiProxyFactoryBean;
     }
 
 
 
     @Bean
-    Console Console() {
+    Console console() {
         return new Console();
     }
 }

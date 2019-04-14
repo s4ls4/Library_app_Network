@@ -14,5 +14,4 @@ public class ServiceConfig {
     ExecutorService executorService() {
         return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
-
 }

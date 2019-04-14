@@ -41,6 +41,7 @@ public class Console {
 //    private DBPurchaseService DBPurchaseService;
 
 
+
     @Autowired
     public Console(IBookService bookService, ExecutorService executorService) {
         this.bookService = bookService;
@@ -130,7 +131,7 @@ public class Console {
                         int cmdBooks = menuBooks();
                         while (cmdBooks > 0) {
                             if (cmdBooks == 1) {
-                                this.printBooksWithPaging();
+                                this.printAllBooks();
                             }
                             if (cmdBooks == 2) {
                                 this.addBooks();
@@ -292,42 +293,7 @@ public class Console {
     }
 
 
-    /**
-     * Prints all clients from the repository
-     */
-//    private void printAllClients() {
-//        Set<Client> client = this.clientService.getAllClients();
-//        client.forEach((i) -> System.out.println(i.toString()));
-//    }
-//
-//    private void printAllBooksXML() {
-//        Set<Book> book = this.XMLBookService.getAllBooks();
-//        book.forEach((i) -> System.out.println(i.toString()));
-//    }
-//
-//    private void printAllClientsXML() {
-//        Set<Client> client = this.XMLClientService.getAllClients();
-//        client.forEach((i) -> System.out.println(i.toString()));
-//    }
-//
-//    private void printAllBooksDB() {
-//        Set<Book> books = this.DBBookService.getAllBooks();
-//        books.forEach((i) -> System.out.println((i.toString())));
-//    }
-//
-//    private void printAllClientsDB() {
-//        Set<Client> clients = this.DBClientService.getAllClients();
-//        clients.forEach((i) -> System.out.println((i.toString())));
-//    }
-//
-//    private void printAllPurchaseDB() {
-//        Set<Purchase> purchases = this.DBPurchaseService.getAllPurchases();
-//        purchases.forEach((i)->System.out.println((i.toString())));
-//    }
-//
-//    /**
-//     * Adds a book to the repository
-//     */
+
     private void addBooks() {
         try {
             Optional<Book> book = readBook();
@@ -340,67 +306,7 @@ public class Console {
             System.out.println(e.getMessage());
         }
     }
-//
-//    /**
-//     * Adds a client to the repository
-//     */
-//    private void addClients() {
-//        Client client = this.readClient();
-//        try {
-//            this.clientService.addClient(client);
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//
-//    private void XMLAddBooks() {
-//
-//        try {
-//            Book book = this.readBook();
-//            this.XMLBookService.addBook(book);
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-//    }
-//
-//
-//    private void XMLAddClients() {
-//        Client client = this.readClient();
-//
-//        try {
-//            this.XMLClientService.addClient(client);
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//
-//    private void DBAddBooks() {
-//
-//        try {
-//            Book book = this.readBook();
-//            this.DBBookService.addBook(book);
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-//    }
-//
-//
-//    private void DBAddClients() {
-//
-//        try {
-//            Client client = this.readClient();
-//            this.DBClientService.addClient(client);
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-//    }
-//
-//
-//    /**
-//     * Deletes a book from the repository
-//     */
+
     private void deleteBooks() {
         System.out.println("Book id: ");
         BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
@@ -416,73 +322,7 @@ public class Console {
         }
     }
 
-//
-//    /**
-//     * Deletes a client from the repository
-//     */
-//    private void deleteClients() {
-//        System.out.println("Client id: ");
-//        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-//
-//        try {
-//            Long id = Long.valueOf(bufferRead.readLine());
-//            this.clientService.deleteClient(id);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void XMLDeleteBooks() {
-//        System.out.println("Book id: ");
-//        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-//
-//        try {
-//            Long id = Long.valueOf(bufferRead.readLine());
-//            this.XMLBookService.deleteBook(id);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void XMLDeleteClients() {
-//        System.out.println("Client id: ");
-//        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-//
-//        try {
-//            Long id = Long.valueOf(bufferRead.readLine());
-//            this.XMLClientService.deleteClient(id);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void DBDeleteBooks() {
-//
-//        System.out.println("Book id: ");
-//        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-//
-//        try {
-//            Long id = Long.valueOf(bufferRead.readLine());
-//            this.DBBookService.deleteBook(id);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//
-//    private void DBDeleteClients() {
-//        System.out.println("Client id: ");
-//        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-//
-//        try {
-//            Long id = Long.valueOf(bufferRead.readLine());
-//            this.DBClientService.deleteClient(id);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//
+
   /**
    * Updates a book from the repository
    */
@@ -503,144 +343,6 @@ public class Console {
           System.out.println(e.getMessage());
       }
   }
-//
-//    /**
-//     * Update a client from the repository
-//     */
-//    private void updateClient() {
-//        Client client = this.readClient();
-//
-//        try {
-//            this.clientService.updateClient(client);
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//    private void updateBookXML() {
-//
-//        this.XMLDeleteBooks();
-//        this.XMLAddBooks();
-//    }
-//
-//    private void XMLUpdateClient() {
-//
-//        this.XMLDeleteClients();
-//        this.XMLAddClients();
-//    }
-//
-//    private void DBupdateBooks() {
-//
-//        try {
-//            Book book = this.readBook();
-//            this.DBBookService.updateBook(book);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//    private void DBupdateClient() {
-//        Client client = this.readClient();
-//
-//        try {
-//            this.DBClientService.updateClient(client);
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//    private void buyBook() {
-//        Purchase purchase = this.readPurchase();
-//        Set<Client> clients = this.clientService.getAllClients();
-//        Set<Book> books = this.bookService.getAllBooks();
-//
-//        buyOperation(purchase, clients, books);
-//    }
-//
-//    private void buyOperation(Purchase purchase, Set<Client> clients, Set<Book> books) {
-//        try {
-//            final int[] price = new int[1];
-//            this.purchaseService.addPurchase(purchase);
-//            books.forEach(i -> {
-//                if (i.getId().equals(purchase.getIdBook())) {
-//                    price[0] = i.getPrice();
-//                }
-//            });
-//
-//            clients.forEach((i) -> {
-//                if (i.getId().equals(purchase.getIdClient())) {
-//                    i.setSpent(i.getSpent() + price[0]);
-//                }
-//            });
-//
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//    private void buyBookXML() {
-//        Purchase purchase = this.readPurchase();
-//        Set<Client> clients = this.XMLClientService.getAllClients();
-//        Set<Book> books = this.XMLBookService.getAllBooks();
-//
-//
-//        buyOperation(purchase, clients, books);
-//    }
-//
-//    private void DBbuyBook() {
-//        Purchase purchase = this.readPurchase();
-//        Set<Client> clients = this.DBClientService.getAllClients();
-//        Set<Book> books = this.DBBookService.getAllBooks();
-//
-//        DBbuyOperation(purchase, clients, books);
-//    }
-//
-//    private void DBbuyOperation(Purchase purchase, Set<Client> clients, Set<Book> books) {
-//        try {
-//            final int[] price = new int[1];
-//            this.DBPurchaseService.addPurchase(purchase);
-//            books.forEach(i -> {
-//                if (i.getId().equals(purchase.getIdBook())) {
-//                    price[0] = i.getPrice();
-//                }
-//            });
-//
-//            clients.forEach((i) -> {
-//                if (i.getId().equals(purchase.getIdClient())) {
-//                    i.setSpent(i.getSpent() + price[0]);
-//                }
-//            });
-//
-//        } catch (ValidatorException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//    private void filterClients() {
-//        Set<Client> clients = this.clientService.getAllClients();
-//        Stream<Client> inactive = clients.stream().filter(c -> c.getSpent() == 0);
-//        inactive.forEach((i) -> System.out.println(i.toString()));
-//    }
-//
-//    private void filterClientsXML() {
-//        Set<Client> clients = this.XMLClientService.getAllClients();
-//        Stream<Client> inactive = clients.stream().filter(c -> c.getSpent() == 0);
-//        inactive.forEach((i) -> System.out.println(i.toString()));
-//    }
-//
-//    private void sortClients() {
-//        Set<Client> clients = this.clientService.getAllClients();
-//
-//        clients.stream().sorted(Comparator.comparing(Client::getSpent))
-//                .forEach(c -> System.out.println(c.toString()));
-//    }
-//
-//    private void sortClientsXML() {
-//        Set<Client> clients = this.XMLClientService.getAllClients();
-//
-//        clients.stream().sorted(Comparator.comparing(Client::getSpent))
-//                .forEach(c -> System.out.println(c.toString()));
-//    }
 
     /**
      * Reads a book from the console
@@ -740,111 +442,5 @@ public class Console {
         }
     }
 
-//    private void printBooksWithPagingDB() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("page size: ");
-//        int size = scanner.nextInt();
-//        XMLBookService.setPageSize(size);
-//
-//        System.out.println("'n' - next | 'x' - exit: ");
-//
-//        while (true) {
-//            String cmd = scanner.next();
-//            if (cmd.equals("x")) {
-//                System.out.println("exit");
-//                break;
-//            } else if (cmd.equals("n")) {
-//                Set<Book> books = DBBookService.getNextBook();
-//                if (books.size() == 0) {
-//                    System.out.println("That's all books!");
-//                    break;
-//                }
-//                books.forEach(System.out::println);
-//            } else {
-//                System.out.println("Invalid input!");
-//            }
-//        }
-//    }
-//
-//
-//    private void printClientsWithPaging() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("page size: ");
-//        int size = scanner.nextInt();
-//        clientService.setPageSize(size);
-//
-//        System.out.println("'n' - next | 'x' - exit: ");
-//
-//        while (true) {
-//            String cmd = scanner.next();
-//            if (cmd.equals("x")) {
-//                System.out.println("exit");
-//                break;
-//            } else if (cmd.equals("n")) {
-//                Set<Client> clients = clientService.getNextClient();
-//                if (clients.size() == 0) {
-//                    System.out.println("That's all clients!");
-//                    break;
-//                }
-//                clients.forEach(System.out::println);
-//            } else {
-//                System.out.println("Invalid input!");
-//            }
-//        }
-//    }
-//
-//    private void printBooksWithPagingXML() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("page size: ");
-//        int size = scanner.nextInt();
-//        XMLBookService.setPageSize(size);
-//
-//        System.out.println("'n' - next | 'x' - exit: ");
-//
-//        while (true) {
-//            String cmd = scanner.next();
-//            if (cmd.equals("x")) {
-//                System.out.println("exit");
-//                break;
-//            } else if (cmd.equals("n")) {
-//                Set<Book> books = XMLBookService.getNextBook();
-//                if (books.size() == 0) {
-//                    System.out.println("That's all books!");
-//                    break;
-//                }
-//                books.forEach(System.out::println);
-//            } else {
-//                System.out.println("Invalid input!");
-//            }
-//        }
-//    }
-//
-//
-//
-//
-//    private void printClientsWithPagingXML() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("page size: ");
-//        int size = scanner.nextInt();
-//        XMLClientService.setPageSize(size);
-//
-//        System.out.println("'n' - next | 'x' - exit: ");
-//
-//        while (true) {
-//            String cmd = scanner.next();
-//            if (cmd.equals("x")) {
-//                System.out.println("exit");
-//                break;
-//            } else if (cmd.equals("n")) {
-//                Set<Client> clients = XMLClientService.getNextClient();
-//                if (clients.size() == 0) {
-//                    System.out.println("That's all clients!");
-//                    break;
-//                }
-//                clients.forEach(System.out::println);
-//            } else {
-//                System.out.println("Invalid input!");
-//            }
-//        }
-//    }
+
 }
