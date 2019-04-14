@@ -8,9 +8,7 @@ import java.util.concurrent.Executors;
 public class ClientApp {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(
-                        "config"
-                );
+                new AnnotationConfigApplicationContext("config");
 
         Console console = context
                 .getBean(Console.class);

@@ -19,7 +19,6 @@ public class ServerAppConfig {
         exporter.setServiceName("IBookService");
         exporter.setServiceInterface(IBookService.class);
         exporter.setService(bookService());
-        exporter.setRegistryPort(1111);
         System.out.println(exporter);
         return exporter;
     }

@@ -21,9 +21,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class ServerApp {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(
-                        "config"
-                );
+                new AnnotationConfigApplicationContext("config");
 
         System.out.println("server starting...");
     }
