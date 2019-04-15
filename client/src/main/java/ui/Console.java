@@ -51,7 +51,7 @@ public class Console {
     public Console() {
     }
 
-    private int menuFormat() {
+    private void menuFormat() {
         System.out.println("___________________________");
         System.out.println(" ");
         System.out.println("  B O O K   L I B R A R Y");
@@ -62,11 +62,11 @@ public class Console {
 
         System.out.println("0. Exit");
 
-        Scanner in = new Scanner(System.in);
-        return in.nextInt();
+//        Scanner in = new Scanner(System.in);
+//        return in.nextInt();
     }
 
-    private int menu() {
+    private void menu() {
         System.out.println("___________________________");
         System.out.println(" ");
         System.out.println("  B O O K   L I B R A R Y");
@@ -79,11 +79,9 @@ public class Console {
         System.out.println("5. Sort clients");
         System.out.println("0. Exit");
 
-        Scanner in = new Scanner(System.in);
-        return in.nextInt();
     }
 
-    private int menuBooks() {
+    private void menuBooks() {
         System.out.println("_________________________________________");
         System.out.println(" ");
         System.out.println("  B O O K   L I B R A R Y / B O O K S");
@@ -95,8 +93,7 @@ public class Console {
         System.out.println("4. Update a book");
         System.out.println("0. Exit");
 
-        Scanner in = new Scanner(System.in);
-        return in.nextInt();
+
     }
 
     private int menuClients() {
@@ -122,27 +119,56 @@ public class Console {
      */
     public void runConsole() {
 
-        int format = menuFormat();
+        menuFormat();
+        System.out.println("enter command: ");
+        Scanner in = new Scanner(System.in);
+        int format = in.nextInt();
+
+
         while (format > 0) {
             if (format == 1) {
-                int cmdMain = menu();
+//                System.out.println("enter cmd:");
+
+                menu();
+                System.out.println("enter command: ");
+                Scanner in2 = new Scanner(System.in);
+                int cmdMain = in2.nextInt();
                 while (cmdMain > 0) {
                     if (cmdMain == 1) {
-                        int cmdBooks = menuBooks();
+//                        System.out.println("enter cmd:");
+                        menuBooks();
+                        System.out.println("enter command: ");
+                        Scanner in3 = new Scanner(System.in);
+                        int cmdBooks = in3.nextInt();
                         while (cmdBooks > 0) {
                             if (cmdBooks == 1) {
                                 this.printAllBooks();
+                                System.out.println("enter cmd:");
+
+                                cmdBooks = in3.nextInt();
                             }
                             if (cmdBooks == 2) {
                                 this.addBooks();
+                                System.out.println("enter cmd:");
+
+                                cmdBooks = in3.nextInt();
                             }
                             if (cmdBooks == 3) {
                                 this.deleteBooks();
+                                System.out.println("enter cmd:");
+
+                                cmdBooks = in3.nextInt();
                             }
                             if (cmdBooks == 4) {
                                 this.updateBooks();
+                                System.out.println("enter cmd:");
+
+                                cmdBooks = in3.nextInt();
                             }
-                            cmdBooks = menuBooks();
+                            if (cmdBooks == 0) {
+                                break;
+                            }
+
                         }
                     }
                     if (cmdMain == 2) {
@@ -164,7 +190,7 @@ public class Console {
                         }
                     }
                     if (cmdMain == 3) {
-                       // this.buyBook();
+                        // this.buyBook();
                     }
                     if (cmdMain == 4) {
                         //this.filterClients();
@@ -172,124 +198,132 @@ public class Console {
                     if (cmdMain == 5) {
                         //this.sortClients();
                     }
-                    cmdMain = menu();
+                    System.out.println("enter cmd:");
+
+                    cmdMain = in2.nextInt();
                 }
             }
-            if (format == 2) {
-                int cmdMain = menu();
-                while (cmdMain > 0) {
-                    if (cmdMain == 1) {
-                        int cmdBooks = menuBooks();
-                        while (cmdBooks > 0) {
-                            if (cmdBooks == 1) {
-                                //this.printAllBooksXML();
-                          //      this.printBooksWithPagingXML();
-                            }
-                            if (cmdBooks == 2) {
-                            //    this.XMLAddBooks();
-                            }
-                            if (cmdBooks == 3) {
-                              //  this.XMLDeleteBooks();
-                            }
-                            if (cmdBooks == 4) {
-                                //this.updateBookXML();
-                            }
-                            if (cmdBooks == 5) {
-                                //this.updateBookXML();
-                            }
-                            cmdBooks = menuBooks();
-                        }
-                    }
-                    if (cmdMain == 2) {
-                        int cmdClients = menuClients();
-                        while (cmdClients > 0) {
-                            if (cmdClients == 1) {
-  //                              this.printClientsWithPagingXML();
-                            }
-                            if (cmdClients == 2) {
-    //                            this.XMLAddClients();
-                            }
-                            if (cmdClients == 3) {
-      //                          this.XMLDeleteClients();
-                            }
-                            if (cmdClients == 4) {
-        //                        this.XMLUpdateClient();
-                            }
-                            cmdClients = menuClients();
-                        }
-                    }
-                    if (cmdMain == 3) {
-          //              this.buyBookXML();
-                    }
-                    if (cmdMain == 4) {
-            //            this.filterClientsXML();
-                    }
-                    if (cmdMain == 5) {
-              //          this.sortClientsXML();
-                    }
-                    cmdMain = menu();
-                }
-
-            }
-            if (format == 3) {
-                int cmdMain = menu();
-                while (cmdMain > 0) {
-                    if (cmdMain == 1) {
-                        int cmdBooks = menuBooks();
-                        while (cmdBooks > 0) {
-                            if (cmdBooks == 1) {
-     //                           this.printBooksWithPagingDB();
-                            }
-                            if (cmdBooks == 2) {
-       //                         this.DBAddBooks();
-                            }
-                            if (cmdBooks == 3) {
-         //                       this.DBDeleteBooks();
-                            }
-                            if (cmdBooks == 4) {
-           //                     this.DBupdateBooks();
-                            }
-                            cmdBooks = menuBooks();
-                        }
-                    }
-                    if (cmdMain == 2) {
-                        int cmdClients = menuClients();
-                        while (cmdClients > 0) {
-                            if (cmdClients == 1) {
-             //                   this.printAllClientsDB();
-                            }
-                            if (cmdClients == 2) {
-               //                 this.DBAddClients();
-                            }
-                            if (cmdClients == 3) {
-                 //               this.DBDeleteClients();
-                            }
-                            if (cmdClients == 4) {
-                   //             this.DBupdateClient();
-                            }
-                            cmdClients = menuClients();
-                        }
-                    }
-                    if (cmdMain == 3) {
-                     //   this.DBbuyBook();
-                    }
-                    cmdMain = menu();
-                }
-
-            }
-
         }
     }
+//            if (format == 2) {
+//              int cmdMain = menu();
+//                while (cmdMain > 0) {
+//                    if (cmdMain == 1) {
+//                        int cmdBooks = menuBooks();
+//                        while (cmdBooks > 0) {
+//                            if (cmdBooks == 1) {
+//                                //this.printAllBooksXML();
+//                                //      this.printBooksWithPagingXML();
+//                            }
+//                            if (cmdBooks == 2) {
+//                                //    this.XMLAddBooks();
+//                            }
+//                            if (cmdBooks == 3) {
+//                                //  this.XMLDeleteBooks();
+//                            }
+//                            if (cmdBooks == 4) {
+//                                //this.updateBookXML();
+//                            }
+//                            if (cmdBooks == 5) {
+//                                //this.updateBookXML();
+//                            }
+//                            cmdBooks = menuBooks();
+//                        }
+//                    }
+//                }
+//            }
+//                    if (cmdMain == 2) {
+//                        int cmdClients = menuClients();
+//                        while (cmdClients > 0) {
+//                            if (cmdClients == 1) {
+//  //                              this.printClientsWithPagingXML();
+//                            }
+//                            if (cmdClients == 2) {
+//    //                            this.XMLAddClients();
+//                            }
+//                            if (cmdClients == 3) {
+//      //                          this.XMLDeleteClients();
+//                            }
+//                            if (cmdClients == 4) {
+//        //                        this.XMLUpdateClient();
+//                            }
+//                            cmdClients = menuClients();
+//                        }
+//                    }
+//                    if (cmdMain == 3) {
+//          //              this.buyBookXML();
+//                    }
+//                    if (cmdMain == 4) {
+//            //            this.filterClientsXML();
+//                    }
+//                    if (cmdMain == 5) {
+//              //          this.sortClientsXML();
+//                    }
+//                    cmdMain = menu();
+//                }
+//
+//            }
+//            if (format == 3) {
+//                int cmdMain = menu();
+//                while (cmdMain > 0) {
+//                    if (cmdMain == 1) {
+//                        int cmdBooks = menuBooks();
+//                        while (cmdBooks > 0) {
+//                            if (cmdBooks == 1) {
+//     //                           this.printBooksWithPagingDB();
+//                            }
+//                            if (cmdBooks == 2) {
+//       //                         this.DBAddBooks();
+//                            }
+//                            if (cmdBooks == 3) {
+//         //                       this.DBDeleteBooks();
+//                            }
+//                            if (cmdBooks == 4) {
+//           //                     this.DBupdateBooks();
+//                            }
+//                            cmdBooks = menuBooks();
+//                        }
+//                    }
+//                    if (cmdMain == 2) {
+//                        int cmdClients = menuClients();
+//                        while (cmdClients > 0) {
+//                            if (cmdClients == 1) {
+//             //                   this.printAllClientsDB();
+//                            }
+//                            if (cmdClients == 2) {
+//               //                 this.DBAddClients();
+//                            }
+//                            if (cmdClients == 3) {
+//                 //               this.DBDeleteClients();
+//                            }
+//                            if (cmdClients == 4) {
+//                   //             this.DBupdateClient();
+//                            }
+//                            cmdClients = menuClients();
+//                        }
+//                    }
+//                    if (cmdMain == 3) {
+//                     //   this.DBbuyBook();
+//                    }
+//                    cmdMain = menu();
+//                }
+
+
+
 
     /**
      * Prints all books from the repository
      */
     private void printAllBooks() {
+        try {
         executorService.submit(() -> {
             Set<Book> books = bookService.getAllBooks();
             books.forEach(System.out::println);
 
         });
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 
@@ -298,10 +332,10 @@ public class Console {
         try {
             Optional<Book> book = readBook();
             book.orElseThrow(() -> new ValidatorException("Invalid input"));
-            executorService.submit(() -> {
+//            executorService.submit(() -> {
                 bookService.addBook(book.get());
                 System.out.println("Book was added!");
-            });
+//            });
         } catch (ValidatorException e) {
             System.out.println(e.getMessage());
         }

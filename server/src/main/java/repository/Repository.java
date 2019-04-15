@@ -10,6 +10,7 @@ import domain.validators.ValidatorException;
 import java.io.Serializable;
 import java.util.Optional;
 
+@Deprecated
 public interface Repository<ID extends Serializable, T extends BaseEntity<ID>> {
     /**
      * Find the entity with the given id.

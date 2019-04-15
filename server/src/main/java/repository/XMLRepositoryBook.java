@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public class XMLRepositoryBook extends InMemoryRepository<Long, Book> {
 
     private String fileName;

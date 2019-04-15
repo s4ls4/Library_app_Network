@@ -18,7 +18,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+@Deprecated
 public class XMLRepositoryClient extends InMemoryRepository<Long, Client> {
 
     private String fileName;

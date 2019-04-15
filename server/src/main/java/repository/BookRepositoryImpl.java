@@ -36,13 +36,27 @@ public class BookRepositoryImpl implements BookRepository{
 //    }
 
     @Override
+    public Book findOne(Long id) {
+        String sql = "SELECT * FROM books WHERE bid='" + id +"';";
+        return jdbcOperations.query(sql, (rs, rowNum) -> {
+            String serialNumber = rs.getString("bserialnumber");
+            String name = rs.getString("bname");
+            String author = rs.getString("author");
+            int price = rs.getInt("price");
+            Book bl = new Book(serialNumber, name, author, price);
+            bl.setId(id);
+            return bl;
+        }).get(0);
+    }
+
+    @Override
     public List<Book> findAll() {
         String sql = "select * from books";
         return jdbcOperations.query(sql, (rs, rowNum) -> {
-            Long id = rs.getLong("id");
-            String serialNumber = rs.getString("bserialNumber");
-            String name = rs.getString("bserialNumber");
-            String author = rs.getString("bserialNumber");
+            Long id = rs.getLong("bid");
+            String serialNumber = rs.getString("bserialnumber");
+            String name = rs.getString("bname");
+            String author = rs.getString("author");
             int price = rs.getInt("price");
 
             Book b = new Book(serialNumber,name,author,price);
@@ -53,14 +67,15 @@ public class BookRepositoryImpl implements BookRepository{
 
     @Override
     public void save(Book book) {
-        String sql = "insert into books(bid,\"bserialNumber\",bname,author,price) values (?,?,?,?,?)";
+        System.out.println("o intrat in add");
+        String sql = "insert into books(bid,\"bserialnumber\",bname,author,price) values (?,?,?,?,?)";
         bookValidator.validate(book);
         jdbcOperations.update(sql, book.getId(), book.getSerialNumber(),book.getName(),book.getAuthor(),book.getPrice());
     }
 
     @Override
     public void update(Book book) {
-        String sql = "UPDATE book SET \"bserialNumber\"=?, bname=?, author=?, price=? where bid=?";
+        String sql = "UPDATE book SET \"bserialnumber\"=?, bname=?, author=?, price=? where bid=?";
         bookValidator.validate(book);
         jdbcOperations.update(sql, book.getSerialNumber(),book.getName(),book.getAuthor(),book.getPrice(), book.getId());
     }

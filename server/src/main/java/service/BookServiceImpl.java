@@ -38,6 +38,7 @@ public class BookServiceImpl implements IBookService{
 
     @Override
     public void addBook(Book book) {
+        System.out.println("o intrat in add in service");
         bookRepository.save(book);
     }
 

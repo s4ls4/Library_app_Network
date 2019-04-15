@@ -24,6 +24,7 @@ public class BookServiceClient implements IBookService {
 
     @Override
     public void addBook(Book book) {
+        System.out.println("asdsffggh");
         bookService.addBook(book);
     }
 

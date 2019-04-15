@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BookRepository {
 
-   // Book findOne(Long id);
+   Book findOne(Long id);
     List<Book> findAll();
     void save(Book book) throws ValidatorException;
     void delete(Long id);
